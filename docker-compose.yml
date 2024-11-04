@@ -6,8 +6,9 @@ services:
       - "3000:3000"
     volumes:
       - client-node-modules:/usr/src/app/node_modules
-    environment:
-      - NODE_ENV=development
+    env_file:
+      - .env
+
   server:
     build:
       context: ./server
@@ -15,27 +16,26 @@ services:
       - "4000:4000"
     volumes:
       - server-node-modules:/usr/src/app/node_modules
-    environment:
-      - NODE_ENV=development
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=your_db
-      - POSTGRES_USER=your_user
-      - POSTGRES_PASSWORD=your_password
+    env_file:
+      - .env
+
   redis:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+    env_file:
+      - .env
+
   postgres:
     image: "postgres:13"
     environment:
-      POSTGRES_DB: your_db
-      POSTGRES_USER: your_user
-      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+    env_file:
+      - .env
 
 volumes:
   client-node-modules:
